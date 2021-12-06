@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace APrioriPCY
@@ -61,12 +62,13 @@ namespace APrioriPCY
             {
                 for (int second = first + 1; second < items.Count; second++)
                 {
-                    int pocket = ((items[first] * items.Count) + items[second]) % _hashNumber;
+                    SmallerGreaterOut(items[first], items[second], out int smaller, out int greater);
+                    int pocket = ((smaller * items.Count) + greater) % _hashNumber;
                     if (hashPockets[pocket] >= threshold)
                     {
                         _frequentPairs++;
-                        if(pairCounter[items[first], items[second]] >= threshold) 
-                            values.Add(pairCounter[items[first], items[second]]);
+                        if(pairCounter[smaller, greater] >= threshold) 
+                            values.Add(pairCounter[smaller, greater]);
                     }
                 }
             }
@@ -88,8 +90,7 @@ namespace APrioriPCY
                     {
                         if (itemCounts[basket[first]] >= threshold && itemCounts[basket[second]] >= threshold)
                         {
-                            int smaller = Math.Min(basket[first], basket[second]);
-                            int greater = Math.Max(basket[first], basket[second]);
+                            SmallerGreaterOut(basket[first], basket[second], out int smaller, out int greater);
                             int pocket = ((smaller * numberOfItems) + greater) % _hashNumber;
                             if (hashPockets[pocket] >= threshold)
                             {
@@ -113,8 +114,7 @@ namespace APrioriPCY
                     {
                         if (itemCounts[basket[first]] >= threshold && itemCounts[basket[second]] >= threshold)
                         {
-                            int smaller = Math.Min(basket[first], basket[second]);
-                            int greater = Math.Max(basket[first], basket[second]);
+                            SmallerGreaterOut(basket[first], basket[second], out int smaller, out int greater);
                             int pocket = ((smaller * numberOfItems) + greater) % _hashNumber;
                             hashPockets[pocket]++;
                         }
@@ -126,7 +126,7 @@ namespace APrioriPCY
         private void ReadInputData(Dictionary<int, int> itemCounts, List<List<int>> baskets)
         {
             _numberOfBaskets = int.Parse(ReadLine());
-            _thresholdPercentage = double.Parse(ReadLine());
+            _thresholdPercentage = double.Parse(ReadLine(), CultureInfo.InvariantCulture);
             _hashNumber = int.Parse(ReadLine());
 
             for (int i = 0; i < _numberOfBaskets; i++)
@@ -142,6 +142,18 @@ namespace APrioriPCY
 
             int threshold = ParkChenYu.GetThreshold(_thresholdPercentage, _numberOfBaskets);
             _frequentItems = itemCounts.Values.Count(n => n >= threshold);
+        }
+
+        private void SmallerGreaterOut(int first, int second, out int smaller, out int greater)
+        {
+            if (first > second)
+            {
+                smaller = second;
+                greater = first;
+                return;
+            }
+            smaller = first;
+            greater = second;
         }
     }
 }

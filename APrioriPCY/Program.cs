@@ -8,16 +8,24 @@ namespace APrioriPCY
     {
         public static void Main(string[] args)
         {
-            //D:\faks\8.semestar\Analiza_velikih_skupova_podataka\Labosi\Labos2\APrioriPCY\APrioriPCY\InputData\R.in
             StreamReader read = new StreamReader("InputData/R.in");
             StreamWriter write = new StreamWriter("InputData/result.out");
 
-            Stopwatch st = Stopwatch.StartNew();
-            ParkChenYu algorithm = new ParkChenYu(read.ReadLine, Console.WriteLine);
+            ParkChenYu algorithm = new ParkChenYu(read.ReadLine, write.WriteLine);
             algorithm.Run();
-            Console.WriteLine(st.Elapsed);
             read.Close();
             write.Close();
+
+            var solutionLines = File.ReadAllLines("InputData/R.out");
+            var resultLines = File.ReadAllLines("InputData/result.out");
+
+            int correctCounter = 0;
+            for(int i = 0; i < solutionLines.Length; i++)
+            {
+                if (solutionLines[i] == resultLines[i]) correctCounter++;
+            }
+
+            Console.WriteLine($"accuracy; {correctCounter}/{solutionLines.Length}");
         }
     }
 }
