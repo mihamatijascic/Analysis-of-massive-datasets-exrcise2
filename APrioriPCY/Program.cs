@@ -10,7 +10,7 @@ namespace APrioriPCY
         {
             //D:\faks\8.semestar\Analiza_velikih_skupova_podataka\Labosi\Labos2\APrioriPCY\APrioriPCY\InputData\R.in
             StreamReader read = new StreamReader("InputData/R.in");
-            StreamWriter write = new StreamWriter("TestOutput/testout.txt");
+            StreamWriter write = new StreamWriter("InputData/result.out");
 
             Stopwatch st = Stopwatch.StartNew();
             ParkChenYu algorithm = new ParkChenYu(read.ReadLine, Console.WriteLine);
